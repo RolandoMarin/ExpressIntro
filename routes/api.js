@@ -44,7 +44,9 @@ router.post("/",function(req,res){
        res.status(201).json(newObj);
     }
     catch(err){
+        //wrong
         res.status(500).json({message: err.message});
+
     }
 });
 //update

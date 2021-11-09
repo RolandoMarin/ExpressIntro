@@ -31,14 +31,17 @@ router.post("/",function(req,res){
         //decode the file
         var students = JSON.parse(rawdata);
 
+        var newObj =req.body;
+
+        newObj._id =1;
         //add our new object into array
-        students.push(req.body);
+        students.push(newObj);
 
         //write the data back to the file
        const data = fs.writeFileSync("routes/data.json",JSON.stringify(students));
 
        //return the data to the user
-       res.status(201).json(students);
+       res.status(201).json(newObj);
     }
     catch(err){
         res.status(500).json({message: err.message});
@@ -50,7 +53,29 @@ router.patch("/:id",function(req,res){
 });
 //delete
 router.delete("/:id",function(req,res){
-    res.status(200).json({message : "deleted the recources"});
+    //capture the ID
+    var id = req.params.id;
+
+    //open the file for reading
+    const rawdata = fs.readFileSync("routes/data.json");
+    var students = JSON.parse(rawdata);
+
+    //if found delete it
+    if(students.length >= id){
+        //modify it
+        students.splice(id,1);
+
+        //write the file
+        const data = fs.writeFileSync("routes/data.json",JSON.stringify(students));
+
+        res.status(200).json({message: "Deleted"}); 
+    }
+    else{
+        //if no item found, throw error message
+        res.status(500).json({message:"something went wrong"});
+    }
+
+    
 });
 
 module.exports = router;

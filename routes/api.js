@@ -69,6 +69,40 @@ router.post("/",function(req,res){
 });
 //update
 router.patch("/:id",function(req,res){
+    try{
+        console.log("object being patched :", req.params.id);
+        //open the file
+        const rawdata = fs.readFileSync("routes/data.json");
+
+        //decode the file
+        var students = JSON.parse(rawdata);
+        
+        //add data but controlled
+        var id = req.params.id;
+        var rawBody = req.body;
+
+
+        if(rawBody.name != null){
+            students[id].name = rawBody.name;
+        }
+        if(rawBody.age != null){
+             students[id].age = rawBody.age;
+        }
+        if(rawBody.job != null){
+            students[id].job = rawBody.job;
+        }
+     
+        //write the data back to the file
+       const data = fs.writeFileSync("routes/data.json",JSON.stringify(students));
+
+       //return the data to the user
+       res.status(200).json(students[id]);
+    }
+    catch(err){
+        //wrong
+        res.status(500).json({message: err.message});
+
+    }
     res.status(200).json({message : "edited the recources"});
 });
 //delete

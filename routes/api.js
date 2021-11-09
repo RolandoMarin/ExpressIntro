@@ -30,10 +30,28 @@ router.post("/",function(req,res){
 
         //decode the file
         var students = JSON.parse(rawdata);
+        
+        //add data but controlled
+        var rawBody = req.body;
 
-        var newObj =req.body;
+        var newObj ={
+            name:null,
+            age :null,
+            job : null
+        };
+        if(rawBody.name !=null){
+            newObj.name =rawBody.name;
+        }
+        if(rawBody.age !=null){
+             newObj.age =rawBody.age;
+        }
+        if(rawBody.job !=null){
+         newObj.job =rawBody.job;
+        }
+       
+        //get the actual index
+        newObj._id = students.length;
 
-        newObj._id =1;
         //add our new object into array
         students.push(newObj);
 
